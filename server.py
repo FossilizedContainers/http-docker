@@ -1,21 +1,31 @@
 import flask
 import lipd
+import json
 from flask import Flask
 from flask import send_from_directory
 from flask import request
 from lipd import readLipd
 
 app = Flask(__name__)
-# setting the route pf the server
+
 @app.route('/', methods = ['POST'])
 def receiveLiPD():
-   # setting the files from the POST request equal to a variable
-   fileReceived = request.files['pond']
-   # saving the file locally in order to read it
-   fileReceived.save('pond.lpd')
-   # reading the locally saved pond file
-   readFile = lipd.readLipd("./pond.lpd")
-   # returning the netCDF file from the resulting climate model
+   input = json.loads(request.files['parameters'].read())
+   parameters = input['parameters']
+   file_names = input['inputFiles']
+
+   # read the input lipd files
+   input_lipds = {}
+   for file_name in file_names:
+      file = request.files[file_name]
+      file.save(file_name)
+      input_lipds[file_name] = lipd.readLipd("./" + file_name)
+   
+   # here we would pass parameters & input_lipds to the climate model
+   print(parameters)
+   print(input_lipds)
+
+   # fake NetCDF file that would really come from the climate model
    return send_from_directory("./", "test.nc")
 
 

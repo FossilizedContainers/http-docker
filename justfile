@@ -8,3 +8,7 @@ build:
 # run the docker container with the http server
 run-server: build
     docker run -p 4000:80/tcp -it jadonf/http-server
+
+# run the http client connecting to the docker container
+run-client:
+    python3 ./client.py
