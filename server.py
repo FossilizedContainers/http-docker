@@ -10,17 +10,17 @@ app = Flask(__name__)
 
 @app.route('/', methods = ['POST'])
 def receiveLiPD():
-   input = json.loads(request.files['parameters'].read())
-   parameters = input['parameters']
-   file_names = input['inputFiles']
+   metadata = json.loads(request.files['metadata.json'].read())
+   parameters = metadata['parameters']
+   inputs = metadata['inputs']
 
    # read the input lipd files
    input_lipds = {}
-   for file_name in file_names:
-      file = request.files[file_name]
-      file.save(file_name)
-      input_lipds[file_name] = lipd.readLipd("./" + file_name)
-   
+   for input in inputs:
+      file = request.files[input]
+      file.save(input)
+      input_lipds[input] = lipd.readLipd("./" + input)
+
    # here we would pass parameters & input_lipds to the climate model
    print(parameters)
    print(input_lipds)

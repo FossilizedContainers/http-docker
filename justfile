@@ -11,4 +11,4 @@ run-server: build
 
 # run the http client connecting to the docker container
 run-client:
-    python3 ./client.py
+    python3 ./client.py run static/run_metadata.json
